@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 7: Ideal Societies & the Moral Imperative</title>
+    
+    <!-- Google Fonts: Orbitron for headings, Inter for body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" xintegrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        /* --- CSS RESET & BASE STYLES --- */
+        :root {
+            --bg-deep-space: #0B1B2B;
+            --accent-teal: #17EAD9;
+            --accent-amber: #FFBF00;
+            --text-light: #F5F7FA;
+            --text-gray: #8294A5;
+            --text-dark: #0B1B2B;
+            --success-green: #28a745;
+            --error-red: #dc3545;
+            --font-heading: 'Orbitron', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-teal) var(--bg-deep-space);
+        }
+        
+        body {
+            background-color: var(--bg-deep-space);
+            color: var(--text-light);
+            font-family: var(--font-body);
+            line-height: 1.7;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* --- STARFIELD BACKGROUND --- */
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* --- UTILITY & ACCESSIBILITY --- */
+        .hidden { display: none; }
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        }
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        }
+        .slide-in-left.visible, .slide-in-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* --- TYPOGRAPHY & GENERAL STYLING --- */
+        h1, h2, h3 {
+            font-family: var(--font-heading);
+            color: var(--accent-teal);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+        h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); }
+        h2 { font-size: clamp(2rem, 5vw, 3rem); }
+        h3 { font-size: clamp(1.5rem, 4vw, 2rem); color: var(--accent-amber); }
+        p { margin-bottom: 1rem; color: var(--text-light); }
+        a { color: var(--accent-teal); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 0;
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .section-header p {
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            color: var(--text-gray);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 1rem;
+        }
+        .hero h1 {
+            text-shadow: 0 0 15px rgba(23, 234, 217, 0.4);
+        }
+        .hero .tagline {
+            font-family: var(--font-body);
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            color: var(--text-light);
+            margin-top: 1rem;
+            min-height: 2em; /* Prevent layout shift */
+        }
+        .tagline .cursor {
+            display: inline-block;
+            background-color: var(--accent-teal);
+            width: 10px;
+            height: 1.2em;
+            margin-left: 5px;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            font-size: 2.5rem;
+            color: var(--accent-teal);
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* --- GLOSSARY BAR --- */
+        .glossary-bar {
+            position: sticky;
+            top: 0;
+            background: rgba(11, 27, 43, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            z-index: 100;
+            width: 100%;
+            border-bottom: 1px solid rgba(23, 234, 217, 0.2);
+            text-align: center;
+        }
+        .glossary-item {
+            display: inline-block;
+            margin: 0 1rem;
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+            color: var(--accent-amber);
+            cursor: help;
+            position: relative;
+        }
+        .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            width: 220px;
+            background-color: var(--text-light);
+            color: var(--text-dark);
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -110px;
+            transition: opacity 0.3s, visibility 0.3s;
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+        .tooltip::after { /* Tooltip arrow */
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--text-light) transparent transparent transparent;
+        }
+        .glossary-item:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* --- INTERACTIVE TIMELINE --- */
+        .timeline-container {
+            position: relative;
+            padding: 2rem 0;
+        }
+        .timeline-scroller {
+            display: flex;
+            gap: 2rem;
+            padding: 2rem 5%; /* Padding for first/last cards */
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-amber) var(--bg-deep-space);
+            -webkit-overflow-scrolling: touch;
+        }
+        .timeline-scroller::-webkit-scrollbar {
+            height: 8px;
+        }
+        .timeline-scroller::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+            border-radius: 4px;
+        }
+        .timeline-scroller::-webkit-scrollbar-thumb {
+            background-color: var(--accent-amber);
+            border-radius: 4px;
+        }
+        .timeline-card {
+            flex: 0 0 300px;
+            background: linear-gradient(145deg, rgba(23, 234, 217, 0.05), rgba(255, 191, 0, 0.05));
+            border: 1px solid rgba(130, 148, 165, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            cursor: pointer;
+            perspective: 1000px;
+        }
+        .timeline-card:hover {
+            transform: translateY(-10px) rotateX(5deg) rotateY(-5deg);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(23, 234, 217, 0.2);
+        }
+        .timeline-card .icon {
+            font-size: 3rem;
+            color: var(--accent-teal);
+            margin-bottom: 1rem;
+        }
+        .timeline-card h3 {
+            font-size: 1.2rem;
+            color: var(--accent-amber);
+        }
+        .timeline-card p {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            margin-bottom: 1.5rem;
+        }
+        .learn-more-btn {
+            background: transparent;
+            border: 2px solid var(--accent-teal);
+            color: var(--accent-teal);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-family: var(--font-heading);
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .learn-more-btn:hover {
+            background-color: var(--accent-teal);
+            color: var(--bg-deep-space);
+        }
+
+        /* --- MODAL --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: var(--bg-deep-space);
+            border: 1px solid var(--accent-teal);
+            border-radius: 15px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.4s ease;
+        }
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+        /* Fun Fact Modal Specific Styles */
+        #fun-fact-modal-content {
+            max-width: 500px;
+        }
+        #fun-fact-modal-content h3 {
+            text-align: center;
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 2rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .modal-body {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        @media (min-width: 768px) {
+            .modal-body {
+                grid-template-columns: 150px 1fr;
+            }
+        }
+        .modal-icon {
+            font-size: 5rem;
+            color: var(--accent-teal);
+            text-align: center;
+        }
+        .modal-text ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .modal-text ul li {
+            padding-left: 1.5em;
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+        .modal-text ul li::before {
+            content: '\f105'; /* FontAwesome right arrow */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--accent-amber);
+            position: absolute;
+            left: 0;
+        }
+        .quote-box {
+            background: rgba(255, 191, 0, 0.1);
+            border-left: 4px solid var(--accent-amber);
+            padding: 1rem;
+            margin-top: 1.5rem;
+            border-radius: 0 8px 8px 0;
+        }
+        .quote-box p {
+            margin: 0;
+            font-style: italic;
+            color: var(--text-light);
+        }
+
+        /* --- QUICK CHECK (QUIZ) --- */
+        .quiz-container {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+            background: rgba(23, 234, 217, 0.03);
+            border-radius: 10px;
+            margin-top: 2rem;
+            padding: 0 2rem;
+        }
+        .quiz-container.active {
+            max-height: 1000px; /* Arbitrary large value */
+            padding: 2rem;
+        }
+        .quiz-toggle {
+            background: none;
+            border: 1px solid var(--accent-amber);
+            color: var(--accent-amber);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: var(--font-heading);
+            display: block;
+            margin: 2rem auto 0;
+            transition: background-color 0.3s;
+        }
+        .quiz-toggle:hover {
+            background-color: rgba(255, 191, 0, 0.1);
+        }
+        .question-block {
+            margin-bottom: 1.5rem;
+        }
+        .question-block p {
+            font-weight: 500;
+            color: var(--text-light);
+        }
+        .answers label {
+            display: block;
+            background: rgba(130, 148, 165, 0.2);
+            padding: 0.75rem 1rem;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border: 2px solid transparent;
+        }
+        .answers label:hover {
+            background: rgba(130, 148, 165, 0.4);
+        }
+        .answers input[type="radio"] {
+            display: none;
+        }
+        .answers input[type="radio"]:checked + span {
+            font-weight: bold;
+        }
+        .answers .correct {
+            background-color: rgba(40, 167, 69, 0.3);
+            border-color: var(--success-green);
+        }
+        .answers .incorrect {
+            background-color: rgba(220, 53, 69, 0.3);
+            border-color: var(--error-red);
+        }
+        .explanation {
+            background: rgba(0,0,0,0.2);
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            display: none; /* Initially hidden */
+        }
+
+        /* --- CASE STUDY CAROUSEL --- */
+        .carousel {
+            position: relative;
+            overflow: hidden;
+            padding: 2rem 0;
+        }
+        .carousel-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .carousel-slide {
+            flex: 0 0 100%;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+        @media (min-width: 768px) {
+            .carousel-slide {
+                grid-template-columns: 250px 1fr;
+            }
+        }
+        .slide-cover img {
+            width: 100%;
+            max-width: 250px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            margin: 0 auto;
+        }
+        .slide-content h4 {
+            font-family: var(--font-heading);
+            color: var(--accent-amber);
+            font-size: 1.5rem;
+        }
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 1rem;
+            pointer-events: none;
+        }
+        .carousel-btn {
+            background: rgba(11, 27, 43, 0.7);
+            border: 1px solid var(--accent-teal);
+            color: var(--accent-teal);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            pointer-events: all;
+            transition: background-color 0.3s;
+        }
+        .carousel-btn:hover {
+            background: var(--accent-teal);
+            color: var(--bg-deep-space);
+        }
+        .carousel-btn.prev {
+            left: 10px;
+        }
+        .carousel-btn.next {
+            right: 10px;
+        }
+
+        /* --- REAL-WORLD TECH SPLIT SECTION --- */
+        .split-section {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+        @media (min-width: 992px) {
+            .split-section {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        .split-column {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 2rem;
+            border-radius: 15px;
+        }
+        .split-column h3 {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .split-column.utopian h3 { color: var(--accent-teal); }
+        .split-column.dystopian h3 { color: var(--accent-amber); }
+        .tech-item {
+            margin-bottom: 2rem;
+        }
+        .tech-item h4 {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            color: var(--text-light);
+            border-bottom: 2px solid var(--text-gray);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* --- FOOTER --- */
+        .footer {
+            background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+            text-align: center;
+            padding: 4rem 1rem 2rem;
+        }
+        .footer-quote {
+            font-size: 1.2rem;
+            font-style: italic;
+            color: var(--text-gray);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+        .footer-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+        .footer-btn {
+            background: var(--accent-amber);
+            color: var(--bg-deep-space);
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-family: var(--font-heading);
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .footer-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 191, 0, 0.3);
+        }
+        .footer-btn.secondary {
+            background: transparent;
+            border: 2px solid var(--accent-amber);
+            color: var(--accent-amber);
+        }
+        .footer-credit {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Starfield Background Canvas -->
+    <canvas id="starfield"></canvas>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <h1 class="fade-in">Ideal Societies & the Moral Imperative</h1>
+        <p class="tagline" id="tagline">
+            <!-- JS will type here -->
+            <span class="cursor"></span>
+        </p>
+        <a href="#timeline" class="scroll-indicator" aria-label="Scroll down to timeline">
+            <i class="fa-solid fa-chevron-down"></i>
+        </a>
+    </header>
+
+    <main>
+        <!-- Sticky Glossary Bar -->
+        <nav class="glossary-bar">
+            <div class="glossary-item" tabindex="0">
+                Categorical Imperative
+                <span class="tooltip">A rule you must follow, regardless of your desires. Moral obligations are derived from pure reason.</span>
+            </div>
+            <div class="glossary-item" tabindex="0">
+                Universality
+                <span class="tooltip">Could this action be a universal law for everyone to follow without creating a contradiction?</span>
+            </div>
+            <div class="glossary-item" tabindex="0">
+                Respect for Persons
+                <span class="tooltip">Treat humanity, whether in yourself or others, always as an end and never as a mere means.</span>
+            </div>
+        </nav>
+
+        <!-- Interactive Timeline Section -->
+        <section id="timeline" class="container">
+            <div class="section-header fade-in">
+                <h2>A Journey Through Ideas</h2>
+                <p>Explore the evolution of ethical thought from foundational principles to complex technological dilemmas. Click a card to dive deeper.</p>
+            </div>
+            <div class="timeline-container">
+                <div class="timeline-scroller">
+                    <!-- Card 1: Kantian Basics -->
+                    <div class="timeline-card fade-in" data-modal-id="modal-kantian-basics" tabindex="0" role="button" aria-haspopup="dialog">
+                        <div class="icon"><i class="fa-solid fa-scale-balanced"></i></div>
+                        <h3>Kantian Basics</h3>
+                        <p>The foundational rules of duty-based ethics.</p>
+                        <button class="learn-more-btn" tabindex="-1">Learn More</button>
+                    </div>
+                    <!-- Card 2: Utopia Paradox -->
+                    <div class="timeline-card fade-in" data-modal-id="modal-utopia-paradox" tabindex="0" role="button" aria-haspopup="dialog">
+                        <div class="icon"><i class="fa-solid fa-place-of-worship"></i></div>
+                        <h3>The Utopia Paradox</h3>
+                        <p>Can a perfect society exist without sacrificing our humanity?</p>
+                        <button class="learn-more-btn" tabindex="-1">Learn More</button>
+                    </div>
+                    <!-- Card 3: Dystopia Warnings -->
+                    <div class="timeline-card fade-in" data-modal-id="modal-dystopia-warnings" tabindex="0" role="button" aria-haspopup="dialog">
+                        <div class="icon"><i class="fa-solid fa-biohazard"></i></div>
+                        <h3>Dystopia's Warnings</h3>
+                        <p>How sci-fi cautionary tales reveal ethical failures.</p>
+                        <button class="learn-more-btn" tabindex="-1">Learn More</button>
+                    </div>
+                    <!-- Card 4: Kantian Vision -->
+                    <div class="timeline-card fade-in" data-modal-id="modal-kantian-vision" tabindex="0" role="button" aria-haspopup="dialog">
+                        <div class="icon"><i class="fa-solid fa-star"></i></div>
+                        <h3>A Kantian Vision</h3>
+                        <p>What would a society built on the Categorical Imperative look like?</p>
+                        <button class="learn-more-btn" tabindex="-1">Learn More</button>
+                    </div>
+                    <!-- Card 5: Real-World Tech -->
+                    <div class="timeline-card fade-in" data-modal-id="modal-real-world-tech" tabindex="0" role="button" aria-haspopup="dialog">
+                        <div class="icon"><i class="fa-solid fa-microchip"></i></div>
+                        <h3>Real-World Tech</h3>
+                        <p>Applying Kantian ethics to today's innovations.</p>
+                        <button class="learn-more-btn" tabindex="-1">Learn More</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Case Study Carousel -->
+        <section id="case-studies" class="container">
+            <div class="section-header fade-in">
+                <h2>Sci-Fi Case Studies</h2>
+                <p>Classic works of science fiction provide powerful thought experiments for applying ethical frameworks.</p>
+            </div>
+            <div class="carousel fade-in">
+                <div class="carousel-track">
+                    <!-- Slide 1: Brave New World -->
+                    <div class="carousel-slide">
+                        <div class="slide-cover">
+                            <img src="https://placehold.co/400x600/0B1B2B/17EAD9?text=Brave+New+World" alt="Book cover for Brave New World">
+                        </div>
+                        <div class="slide-content">
+                            <h4>Brave New World</h4>
+                            <p>Aldous Huxley's World State achieves stability by eliminating suffering, but at what cost? Genetic engineering, conditioning, and the drug "soma" create a population that is happy but not free. From a Kantian perspective, this society is profoundly immoral. It systematically violates the principle of Respect for Persons, treating its citizens as mere means to an end (social stability) and denying them the autonomy to make rational choices and pursue their own ends.</p>
+                            <button class="learn-more-btn fun-fact-btn" data-fact-id="brave-new-world">Fun Facts</button>
+                        </div>
+                    </div>
+                    <!-- Slide 2: Minority Report -->
+                    <div class="carousel-slide">
+                        <div class="slide-cover">
+                            <img src="https://placehold.co/400x600/0B1B2B/FFBF00?text=Minority+Report" alt="Poster for Minority Report">
+                        </div>
+                        <div class="slide-content">
+                            <h4>Minority Report</h4>
+                            <p>The "Precrime" division stops murders before they happen, creating a seemingly perfect system of justice. However, Kant would argue this system is unjust. It punishes individuals for intentions, not actions, and treats them as objects to be managed rather than autonomous agents. By arresting people for crimes they have not yet committed, the system fails to respect their capacity for rational choice and the possibility that they might choose differently when the moment arrives, thus violating their personhood.</p>
+                             <button class="learn-more-btn fun-fact-btn" data-fact-id="minority-report">Fun Facts</button>
+                        </div>
+                    </div>
+                    <!-- Slide 3: 1984 -->
+                    <div class="carousel-slide">
+                        <div class="slide-cover">
+                            <img src="https://placehold.co/400x600/0B1B2B/F5F7FA?text=1984" alt="Book cover for 1984">
+                        </div>
+                        <div class="slide-content">
+                            <h4>1984</h4>
+                            <p>George Orwell's Oceania is the ultimate dystopia of control. The Party's total surveillance through telescreens and the Thought Police eradicates personal autonomy. This is a direct assault on Kantian ethics. The state does not just use people as means; it actively seeks to destroy their capacity for independent, rational thought itself. The goal is to eliminate the very possibility of acting from a sense of duty or moral law, replacing it with absolute obedience to the Party's shifting whims.</p>
+                             <button class="learn-more-btn fun-fact-btn" data-fact-id="1984">Fun Facts</button>
+                        </div>
+                    </div>
+                    <!-- Slide 4: Gattaca -->
+                    <div class="carousel-slide">
+                        <div class="slide-cover">
+                            <img src="https://placehold.co/400x600/0B1B2B/8294A5?text=Gattaca" alt="Poster for Gattaca">
+                        </div>
+                        <div class="slide-content">
+                            <h4>Gattaca</h4>
+                            <p>In Gattaca's society, genetic determinism dictates an individual's entire life path. "Valids" (genetically engineered) are given every advantage, while "In-valids" (conceived naturally) are relegated to menial jobs. This creates a rigid caste system that Kant would condemn. It fails the Universality test—if we universalized the maxim "determine a person's worth by their genes," we would create a society that denies human potential and dignity. It fundamentally fails to respect individuals as ends in themselves, judging them by a biological lottery instead of their choices and character.</p>
+                             <button class="learn-more-btn fun-fact-btn" data-fact-id="gattaca">Fun Facts</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-nav">
+                    <button class="carousel-btn prev" aria-label="Previous slide"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button class="carousel-btn next" aria-label="Next slide"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Real-World Tech Split Section -->
+        <section id="real-world" class="container">
+            <div class="section-header fade-in">
+                <h2>Today's Tech, Tomorrow's Ethics</h2>
+                <p>The dilemmas of science fiction are no longer fiction. How do our current technologies stack up against a Kantian analysis?</p>
+            </div>
+            <div class="split-section">
+                <div class="split-column utopian slide-in-left">
+                    <h3><i class="fa-solid fa-circle-check"></i> Utopian Promise</h3>
+                    <div class="tech-item">
+                        <h4>Social Media</h4>
+                        <p>Connects people globally, facilitates social movements, and gives a voice to the marginalized. It promises a universal platform for communication and understanding.</p>
+                    </div>
+                    <div class="tech-item">
+                        <h4>Surveillance Tech</h4>
+                        <p>Could enhance public safety, find missing persons, and deter crime, creating a more secure and orderly society for everyone to live in.</p>
+                    </div>
+                    <div class="tech-item">
+                        <h4>Bio-engineering</h4>
+                        <p>Promises to eradicate genetic diseases, extend human lifespan, and enhance our capabilities, freeing humanity from biological constraints.</p>
+                    </div>
+                </div>
+                <div class="split-column dystopian slide-in-right">
+                    <h3><i class="fa-solid fa-circle-xmark"></i> Dystopian Reality</h3>
+                     <div class="tech-item">
+                        <h4>Social Media</h4>
+                        <p>Often treats users as a means to an end (data for advertisers). Algorithms can manipulate emotions and spread misinformation, undermining rational autonomy.</p>
+                    </div>
+                    <div class="tech-item">
+                        <h4>Surveillance Tech</h4>
+                        <p>Leads to a loss of privacy and autonomy. When people know they are being watched, their behavior changes, and free expression is chilled, violating their personhood.</p>
+                    </div>
+                    <div class="tech-item">
+                        <h4>Bio-engineering</h4>
+                        <p>Risks creating a genetic class divide (like Gattaca). Could be used to "design" children, treating them as products rather than individuals to be respected.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="footer-quote fade-in">"The true measure of society: not perfection, but respect for each individual."</p>
+        <div class="footer-actions fade-in">
+            <a href="#top" class="footer-btn secondary">Back to Top</a>
+        </div>
+        <p class="footer-credit fade-in">Designed for Dr. Blaine Fisher’s Ethics of Technology through Science Fiction – Interactive Module 7 (© 2025)</p>
+    </footer>
+
+    <!-- MODALS CONTAINER -->
+    <div id="modals-and-quizzes-container">
+        <!-- Modal & Quiz 1: Kantian Basics -->
+        <div class="modal-overlay" id="modal-kantian-basics" role="dialog" aria-modal="true" aria-labelledby="modal-title-kantian-basics" tabindex="-1">
+            <div class="modal-content">
+                <button class="modal-close-btn" aria-label="Close modal">&times;</button>
+                <h2 id="modal-title-kantian-basics">Kantian Ethics 101</h2>
+                <div class="modal-body">
+                    <div class="modal-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+                    <div class="modal-text">
+                        <p>Immanuel Kant's ethics are deontological, meaning they are based on duty and rules, not consequences. The core idea is the <strong>Categorical Imperative</strong>, a moral law that is absolute and must be followed by all rational beings.</p>
+                        <ul>
+                            <li><strong>Universality:</strong> Before you act, ask yourself: "What if everyone did this?" If the action would become self-defeating or create a world no one could rationally want, it's immoral.</li>
+                            <li><strong>Respect for Persons:</strong> Treat all people (including yourself) as having intrinsic worth. Never use someone as a mere tool to get what you want.</li>
+                            <li><strong>Duty:</strong> The only truly moral actions are those done from a sense of duty, not for personal gain, happiness, or because of inclinations.</li>
+                        </ul>
+                        <div class="quote-box">
+                            <p>"Act only according to that maxim whereby you can at the same time will that it should become a universal law." - Immanuel Kant</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="quiz-toggle" data-quiz-id="quiz-kantian-basics">Quick Check <i class="fa-solid fa-chevron-down"></i></button>
+                <div class="quiz-container" id="quiz-kantian-basics">
+                    <form>
+                        <div class="question-block">
+                            <p>1. According to Kant, a moral action is judged by its:</p>
+                            <div class="answers" data-correct="a">
+                                <label><input type="radio" name="q1" value="a"> <span>Adherence to a universal rule.</span></label>
+                                <label><input type="radio" name="q1" value="b"> <span>Positive consequences.</span></label>
+                                <label><input type="radio" name="q1" value="c"> <span>Ability to create happiness.</span></label>
+                            </div>
+                            <div class="explanation"><strong>Explanation:</strong> Kantian ethics are deontological, focusing on rules and duty, not the outcomes (consequences) of an action. The morality lies in whether the action's maxim can be universalized.</div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal & Quiz 2: Utopia Paradox -->
+        <div class="modal-overlay" id="modal-utopia-paradox" role="dialog" aria-modal="true" aria-labelledby="modal-title-utopia-paradox" tabindex="-1">
+            <div class="modal-content">
+                <button class="modal-close-btn" aria-label="Close modal">&times;</button>
+                <h2 id="modal-title-utopia-paradox">The Utopia Paradox</h2>
+                <div class="modal-body">
+                    <div class="modal-icon"><i class="fa-solid fa-place-of-worship"></i></div>
+                    <div class="modal-text">
+                        <p>The paradox of utopia is that the attempt to create a perfect society often leads to the destruction of what makes us human. Many fictional utopias achieve peace and stability by eliminating choice, struggle, and deep emotion.</p>
+                        <ul>
+                            <li><strong>Violating Autonomy:</strong> In <em>Brave New World</em>, citizens are conditioned for their roles. They are happy, but they are not free. This violates the Kantian demand that individuals must be able to make rational choices.</li>
+                            <li><strong>Ends vs. Means:</strong> A common utopian pitfall is justifying oppressive measures (the means) for the sake of a perfect society (the end). For Kant, this is always immoral, as people cannot be sacrificed for a "greater good."</li>
+                        </ul>
+                        <div class="quote-box">
+                            <p>"The price of perfect happiness is the loss of everything that makes us human: love, freedom, art, and even science."</p>
+                        </div>
+                    </div>
+                </div>
+                 <button class="quiz-toggle" data-quiz-id="quiz-utopia-paradox">Quick Check <i class="fa-solid fa-chevron-down"></i></button>
+                <div class="quiz-container" id="quiz-utopia-paradox">
+                    <!-- Quiz content for Utopia Paradox -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal & Quiz 3: Dystopia Warnings -->
+        <div class="modal-overlay" id="modal-dystopia-warnings" role="dialog" aria-modal="true" aria-labelledby="modal-title-dystopia-warnings" tabindex="-1">
+            <div class="modal-content">
+                <button class="modal-close-btn" aria-label="Close modal">&times;</button>
+                <h2 id="modal-title-dystopia-warnings">Dystopia's Warnings</h2>
+                <div class="modal-body">
+                    <div class="modal-icon"><i class="fa-solid fa-biohazard"></i></div>
+                    <div class="modal-text">
+                        <p>Dystopian fiction, like <em>1984</em> and <em>Minority Report</em>, serves as a powerful warning by showing societies where Kantian principles have been completely abandoned. They are case studies in moral failure.</p>
+                        <ul>
+                            <li><strong>Crushing Free Will:</strong> The Thought Police in <em>1984</em> don't just punish wrong actions; they aim to eliminate the possibility of independent thought. This is the ultimate violation of autonomy.</li>
+                            <li><strong>Instrumentalization:</strong> Pre-cogs in <em>Minority Report</em> are used as tools for law enforcement. Their humanity and well-being are secondary to their function, a clear violation of the Respect for Persons principle.</li>
+                        </ul>
+                        <div class="quote-box">
+                            <p>"In a dystopia, the state doesn't just control your actions; it seeks to control your very soul."</p>
+                        </div>
+                    </div>
+                </div>
+                 <button class="quiz-toggle" data-quiz-id="quiz-dystopia-warnings">Quick Check <i class="fa-solid fa-chevron-down"></i></button>
+                <div class="quiz-container" id="quiz-dystopia-warnings">
+                    <!-- Quiz content for Dystopia Warnings -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal & Quiz 4: Kantian Vision -->
+        <div class="modal-overlay" id="modal-kantian-vision" role="dialog" aria-modal="true" aria-labelledby="modal-title-kantian-vision" tabindex="-1">
+            <div class="modal-content">
+                <button class="modal-close-btn" aria-label="Close modal">&times;</button>
+                <h2 id="modal-title-kantian-vision">A Kantian Vision</h2>
+                <div class="modal-body">
+                    <div class="modal-icon"><i class="fa-solid fa-star"></i></div>
+                    <div class="modal-text">
+                        <p>What would a society built on Kantian ethics look like? It would be a "Kingdom of Ends," where every law and action is designed to respect the autonomy and rationality of every individual.</p>
+                        <ul>
+                            <li><strong>The Prime Directive:</strong> Star Trek's famous rule of non-interference with other cultures, even to "help" them, is a perfect example of respecting autonomy on a galactic scale.</li>
+                            <li><strong>Justice System:</strong> Laws would focus on the action and its maxim, not the person's status or the outcome. Punishment would be about justice, not rehabilitation or deterrence.</li>
+                        </ul>
+                        <div class="quote-box">
+                            <p>"A rational being must always regard himself as giving laws either as member or as sovereign in a kingdom of ends." - Immanuel Kant</p>
+                        </div>
+                    </div>
+                </div>
+                 <button class="quiz-toggle" data-quiz-id="quiz-kantian-vision">Quick Check <i class="fa-solid fa-chevron-down"></i></button>
+                <div class="quiz-container" id="quiz-kantian-vision">
+                    <!-- Quiz content for Kantian Vision -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal & Quiz 5: Real-World Tech -->
+        <div class="modal-overlay" id="modal-real-world-tech" role="dialog" aria-modal="true" aria-labelledby="modal-title-real-world-tech" tabindex="-1">
+            <div class="modal-content">
+                <button class="modal-close-btn" aria-label="Close modal">&times;</button>
+                <h2 id="modal-title-real-world-tech">Real-World Tech Tensions</h2>
+                <div class="modal-body">
+                    <div class="modal-icon"><i class="fa-solid fa-microchip"></i></div>
+                    <div class="modal-text">
+                        <p>Applying Kantian ethics to modern technology reveals deep tensions between a tool's potential for good and its capacity to violate moral principles.</p>
+                        <ul>
+                            <li><strong>Social Media Algorithms:</strong> Does an algorithm that maximizes engagement (and ad revenue) by showing you inflammatory content respect you as a rational being, or does it use your emotional responses as a means to an end?</li>
+                            <li><strong>AI and Autonomy:</strong> If an AI makes a critical decision (e.g., in law or medicine), who is morally responsible? Can we ensure AI systems are built on maxims that could be universalized?</li>
+                        </ul>
+                        <div class="quote-box">
+                            <p>"The question is not whether technology is good or bad, but whether it serves human dignity or subverts it."</p>
+                        </div>
+                    </div>
+                </div>
+                 <button class="quiz-toggle" data-quiz-id="quiz-real-world-tech">Quick Check <i class="fa-solid fa-chevron-down"></i></button>
+                <div class="quiz-container" id="quiz-real-world-tech">
+                    <!-- Quiz content for Real-World Tech -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Fun Fact Modal -->
+        <div id="fun-fact-modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="fun-fact-title" tabindex="-1">
+            <div class="modal-content" id="fun-fact-modal-content">
+                 <button class="modal-close-btn" aria-label="Close modal">&times;</button>
+                 <h3 id="fun-fact-title">Did You Know?</h3>
+                 <p id="fun-fact-text" style="margin-top: 1rem;"></p>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // --- DEBOUNCE UTILITY --- //
+        function debounce(func, wait = 20, immediate = true) {
+            let timeout;
+            return function() {
+                const context = this, args = arguments;
+                const later = function() {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                };
+                const callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) func.apply(context, args);
+            };
+        };
+
+        // --- STARFIELD ANIMATION --- //
+        const starfield = document.getElementById('starfield');
+        const ctx = starfield.getContext('2d');
+        let stars = [];
+        let numStars = 500;
+        
+        function setCanvasSize() {
+            starfield.width = window.innerWidth;
+            starfield.height = window.innerHeight;
+        }
+
+        function createStars() {
+            stars = [];
+            for (let i = 0; i < numStars; i++) {
+                stars.push({
+                    x: Math.random() * starfield.width,
+                    y: Math.random() * starfield.height,
+                    size: Math.random() * 2,
+                    speed: Math.random() * 0.2 + 0.1
+                });
+            }
+        }
+
+        function drawStars(scrollTop) {
+            ctx.clearRect(0, 0, starfield.width, starfield.height);
+            ctx.fillStyle = 'white';
+            stars.forEach(star => {
+                let y = (star.y - scrollTop * star.speed) % starfield.height;
+                if (y < 0) y += starfield.height;
+                ctx.beginPath();
+                ctx.arc(star.x, y, star.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        let lastScrollTop = 0;
+        function animateStarfield() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop !== lastScrollTop) {
+                drawStars(scrollTop);
+                lastScrollTop = scrollTop;
+            }
+            requestAnimationFrame(animateStarfield);
+        }
+
+        setCanvasSize();
+        createStars();
+        drawStars(0);
+        animateStarfield();
+
+        window.addEventListener('resize', debounce(() => {
+            setCanvasSize();
+            createStars();
+            drawStars(window.pageYOffset || document.documentElement.scrollTop);
+        }));
+
+        // --- HERO TYPING EFFECT --- //
+        const taglineEl = document.getElementById('tagline');
+        const textToType = "Where utopias meet Kantian ethics (and sci-fi warns us all).";
+        let typeIndex = 0;
+        
+        function type() {
+            if (typeIndex < textToType.length) {
+                taglineEl.innerHTML = textToType.substring(0, typeIndex + 1) + '<span class="cursor"></span>';
+                typeIndex++;
+                setTimeout(type, 60);
+            } else {
+                taglineEl.querySelector('.cursor').style.animation = 'blink 1s infinite';
+            }
+        }
+        setTimeout(type, 1000);
+
+        // --- INTERSECTION OBSERVER FOR FADE-IN ANIMATIONS --- //
+        const fadeElements = document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        fadeElements.forEach(el => observer.observe(el));
+
+        // --- MAIN MODAL FUNCTIONALITY --- //
+        const modalTriggers = document.querySelectorAll('[data-modal-id]');
+        const modalsAndQuizzesContainer = document.getElementById('modals-and-quizzes-container');
+        let lastFocusedElement;
+
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) return;
+            lastFocusedElement = document.activeElement;
+            const overlay = modal.closest('.modal-overlay');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            overlay.focus();
+            overlay.addEventListener('keydown', handleModalKeydown);
+        }
+
+        function closeModal(modal) {
+            const overlay = modal.closest('.modal-overlay');
+            if (!overlay) return;
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+            overlay.removeEventListener('keydown', handleModalKeydown);
+            const openQuiz = overlay.querySelector('.quiz-container.active');
+            if(openQuiz) {
+                openQuiz.classList.remove('active');
+                openQuiz.style.maxHeight = '0';
+                openQuiz.style.padding = '0 2rem';
+            }
+            if (lastFocusedElement) lastFocusedElement.focus();
+        }
+
+        function handleModalKeydown(e) {
+            const overlay = e.currentTarget;
+            if (e.key === 'Escape') closeModal(overlay.querySelector('.modal-content'));
+            if (e.key === 'Tab') {
+                const focusableElements = overlay.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                const firstElement = focusableElements[0];
+                const lastElement = focusableElements[focusableElements.length - 1];
+                if (e.shiftKey) {
+                    if (document.activeElement === firstElement) {
+                        lastElement.focus();
+                        e.preventDefault();
+                    }
+                } else {
+                    if (document.activeElement === lastElement) {
+                        firstElement.focus();
+                        e.preventDefault();
+                    }
+                }
+            }
+        }
+
+        modalTriggers.forEach(trigger => {
+            trigger.addEventListener('click', () => openModal(trigger.dataset.modalId));
+            trigger.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openModal(trigger.dataset.modalId);
+                }
+            });
+        });
+
+        modalsAndQuizzesContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal-overlay') || e.target.classList.contains('modal-close-btn')) {
+                const modalContent = e.target.closest('.modal-overlay').querySelector('.modal-content');
+                closeModal(modalContent);
+            }
+        });
+
+        // --- QUIZ FUNCTIONALITY --- //
+        const quizToggles = document.querySelectorAll('.quiz-toggle');
+        quizToggles.forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const quizContainer = document.getElementById(toggle.dataset.quizId);
+                quizContainer.classList.toggle('active');
+                if (quizContainer.classList.contains('active')) {
+                    quizContainer.style.maxHeight = quizContainer.scrollHeight + "px";
+                    quizContainer.style.padding = '2rem';
+                } else {
+                    quizContainer.style.maxHeight = '0';
+                    quizContainer.style.padding = '0 2rem';
+                }
+            });
+        });
+
+        const quizForms = document.querySelectorAll('.quiz-container form');
+        quizForms.forEach(form => {
+            form.addEventListener('change', (e) => {
+                if (e.target.type === 'radio') {
+                    const answerBlock = e.target.closest('.answers');
+                    const selectedLabel = e.target.parentElement;
+                    const explanation = answerBlock.nextElementSibling;
+                    const isCorrect = e.target.value === answerBlock.dataset.correct;
+                    Array.from(answerBlock.children).forEach(label => label.classList.remove('correct', 'incorrect'));
+                    selectedLabel.classList.add(isCorrect ? 'correct' : 'incorrect');
+                    if (explanation && explanation.classList.contains('explanation')) explanation.style.display = 'block';
+                }
+            });
+        });
+
+        // --- CAROUSEL FUNCTIONALITY --- //
+        const carousel = document.querySelector('.carousel');
+        if (carousel) {
+            const track = carousel.querySelector('.carousel-track');
+            const slides = Array.from(track.children);
+            const nextButton = carousel.querySelector('.carousel-btn.next');
+            const prevButton = carousel.querySelector('.carousel-btn.prev');
+            let currentIndex = 0;
+
+            const moveToSlide = (targetIndex) => {
+                const slideWidth = slides[0].getBoundingClientRect().width;
+                if (slideWidth === 0) return;
+                track.style.transform = 'translateX(-' + slideWidth * targetIndex + 'px)';
+                currentIndex = targetIndex;
+            };
+
+            nextButton.addEventListener('click', () => {
+                let nextIndex = currentIndex + 1;
+                if (nextIndex >= slides.length) nextIndex = 0;
+                moveToSlide(nextIndex);
+            });
+
+            prevButton.addEventListener('click', () => {
+                let prevIndex = currentIndex - 1;
+                if (prevIndex < 0) prevIndex = slides.length - 1;
+                moveToSlide(prevIndex);
+            });
+
+            window.addEventListener('resize', debounce(() => {
+                track.style.transition = 'transform 0.5s ease-in-out';
+                moveToSlide(currentIndex);
+            }));
+            
+            window.addEventListener('load', () => moveToSlide(0));
+        }
+
+        // --- FUN FACTS MODAL FUNCTIONALITY --- //
+        const funFacts = {
+            'brave-new-world': "Aldous Huxley wrote *Brave New World* in just four months in 1931. He was inspired by a visit to the technologically advanced Brunner and Mond chemical plant in England, which became the model for the novel's Conditioning Centre.",
+            'minority-report': "The original Philip K. Dick short story was published in 1956. In the story, the three 'pre-cogs' are described as 'deformed and retarded idiots,' a much darker and more disturbing depiction than the film's mysterious 'oracles.'",
+            '1984': "George Orwell originally set the novel in 1980, then 1982, before settling on 1984. The title has no deep symbolic meaning; he simply inverted the last two digits of the year he finished writing it, 1948.",
+            'gattaca': "The film's title is based on the four nucleobases of DNA: guanine (G), adenine (A), thymine (T), and cytosine (C). The main staircase in Vincent's apartment was designed to resemble a DNA helix."
+        };
+
+        const funFactModalOverlay = document.getElementById('fun-fact-modal-overlay');
+        const funFactTextEl = document.getElementById('fun-fact-text');
+        const funFactButtons = document.querySelectorAll('.fun-fact-btn');
+
+        funFactButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const factId = button.dataset.factId;
+                const fact = funFacts[factId];
+                if (fact) {
+                    lastFocusedElement = button;
+                    funFactTextEl.textContent = fact;
+                    funFactModalOverlay.classList.add('active');
+                    funFactModalOverlay.focus();
+                    document.body.style.overflow = 'hidden';
+                    funFactModalOverlay.addEventListener('keydown', handleModalKeydown);
+                }
+            });
+        });
+
+    });
+    </script>
+</body>
+</html>
